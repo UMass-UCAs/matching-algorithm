@@ -27,12 +27,12 @@ export function parse(path: string) {
     students = rows.map((row, index) => {
         const message = `Row ${index + 1}`;
         return {
-            firstName: row[1].trim(),
-            lastName: row[2].trim(),
-            spireID: expectNumber(row[3], message),
-            email: row[4],
-            gpa: expectNumber(row[6], message),
-            majorGPA: expectNumber(row[7], message)
+            firstName: row[2].trim(),
+            lastName: row[3].trim(),
+            spireID: expectNumber(row[4], message),
+            email: row[5],
+            gpa: expectNumber(row[7], message),
+            majorGPA: expectNumber(row[8], message)
         }
     });
 }

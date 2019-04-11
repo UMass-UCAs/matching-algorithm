@@ -127,7 +127,7 @@ function parseCourseSummarySheet(xlsxPath: string) {
     return Map(rows
         .filter(row => row.length > 2)
         .map(row => {
-            let count = Number(row[3]);
+            let count = Number(row[2]);
             if (isFinite(count) === false) {
                 count = 0;
             }
@@ -166,7 +166,7 @@ function matching(capacities: Map<string, number>, prefs: List<Preference>) {
 
 function displayMatching(prefs: List<Preference>,
     matching: Map<number, string>) {
-    return matching
+    const result = matching
         .entrySeq()
         .map(([spireID, course]) => {
             const student = students.all().find(s => s.spireID === spireID);
@@ -178,27 +178,45 @@ function displayMatching(prefs: List<Preference>,
             if (pref === undefined) {
                 return fail(`Did not select course!`);
             }
-            return [ course, student.firstName + student.lastName,
+            return [ course, student.firstName + " " + student.lastName,
                 student.email, pref.studentRank, pref.facultyRank,
                 pref.taken, pref.grade,
                 student.gpa, student.majorGPA ];
             })
             .toArray();
+    const headerRow = ['Course', 'UCA Name', 'Student Email', 'Student pref.', 'Faculty rank', 'Taken class?', 'Grade', 'GPA', 'Major GPA'];
+    result.unshift(headerRow);
+    return result;
 }
 
 
 export function main() {
-    students.parse('/Users/arjun/Downloads/students.csv');
-    const capacities = parseCourseSummarySheet('//Users/arjun/Downloads/counts.xlsx');
-    const p = '/Users/arjun/Downloads/sheets/';
-    const prefs = List(fs.readdirSync(p))
+    if (process.argv.length < 3) {
+      console.log("Error: Must specify working directory!");
+      console.log(`Expected directory structure:
+      workingDir/           <= Give this dir to the script
+      ├── applicants.csv    <= list of UCA applicants
+      ├── classes.xlsx      <= list of instructors responses with num UCAS
+      └── classes/
+          ├── class1.xlsx   <= UCA applicant responses for class1
+          ├──  ...
+          └── classN.xlsx   <= UCA applicant responses for classN
+      `);
+      process.exit(1);
+    }
+    const workingDir = process.argv[2];
+    const studentsFile = workingDir + "/applicants.csv";
+    const classesFile = workingDir + "/classes.xlsx";
+    students.parse(studentsFile);
+    const capacities = parseCourseSummarySheet(classesFile);
+    const perClassDir = workingDir + "/classes/";
+    const prefs = List(fs.readdirSync(perClassDir))
         .filter(p => p.endsWith('.xlsx'))
         .filter(p => p.startsWith('~$') === false)
-        .flatMap(path => parseInstructorPreferenceSheet(`${p}/${path}`));
+        .flatMap(path => parseInstructorPreferenceSheet(`${perClassDir}/${path}`));
     (global as any).prefsAll = prefs;
-
-    console.log(convertArrayToCsv(displayMatching(prefs, matching(capacities, prefs))));
-
+    const outCsv = convertArrayToCsv(displayMatching(prefs, matching(capacities, prefs)));
+    fs.writeFileSync('out.csv', outCsv);
 }
 
 console.log(main());
