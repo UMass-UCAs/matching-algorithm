@@ -217,6 +217,7 @@ export function main() {
     (global as any).prefsAll = prefs;
     const outCsv = convertArrayToCsv(displayMatching(prefs, matching(capacities, prefs)));
     fs.writeFileSync('out.csv', outCsv);
+    console.log('See the file ./out.csv for the assignment.');
 }
 
-console.log(main());
+main();
