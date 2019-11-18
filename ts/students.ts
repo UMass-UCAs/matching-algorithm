@@ -29,10 +29,10 @@ export function parse(path: string) {
         return {
             firstName: row[2].trim(),
             lastName: row[3].trim(),
-            spireID: expectNumber(row[4], message),
+            spireID: expectNumber(row[4], message + ' (expected SpireID in column 5)'),
             email: row[5],
-            gpa: expectNumber(row[7], message),
-            majorGPA: expectNumber(row[8], message)
+            gpa: expectNumber(row[7], message  + ' (expected GPA in column 7)'),
+            majorGPA: expectNumber(row[8], message + ' (expected Major GPA in column 8)')
         }
     });
 }

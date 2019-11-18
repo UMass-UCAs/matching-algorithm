@@ -95,8 +95,8 @@ function parseInstructorPreferenceSheet(xlsxPath: string) {
             return false;
         }
         const student = students.get(row[2] as string,
-            expectNumber(row[5], message),
-            expectNumber(row[6], message),
+            expectNumber(row[5], message + '(GPA in Column 6)'),
+            expectNumber(row[6], message + '(Major GPA in Column 7)'),
             message);
         if (student === undefined) {
             // Students sometimes delete themselves from the pool. E.g., Serena.
