@@ -15,7 +15,9 @@ export interface Student {
     spireID: number,
     email: string,
     majorGPA: any,
-    gpa: any
+    gpa: any,
+    freshEmployee: any,
+    freshUCA: any
 }
 
 let students: Student[] = [];
@@ -30,9 +32,11 @@ export function parse(path: string) {
             firstName: row[2].trim(),
             lastName: row[3].trim(),
             spireID: expectNumber(row[4], message + ' (expected SpireID in column 5)'),
-            email: row[5],
+            email: row[1],
             gpa: expectNumber(row[7], message  + ' (expected GPA in column 7)'),
-            majorGPA: expectNumber(row[8], message + ' (expected Major GPA in column 8)')
+            majorGPA: expectNumber(row[8], message + ' (expected Major GPA in column 8)'),
+            freshEmployee: row[5],
+            freshUCA: row[6]
         }
     });
 }

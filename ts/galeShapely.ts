@@ -44,7 +44,9 @@ export function matchingWithCapacity<P,R>(
         });
     });
     const modifiedMatching = galeShapely(modifiedProposers, receivers,
-        modifiedProposerRanking, modifiedReceiverRanking);
+        modifiedProposerRanking, modifiedReceiverRanking, (key) => {
+            return proposerMap.get(key)
+        });
     if (modifiedMatching.kind === 'ok') {
         return modifiedMatching.value.map((uid) => {
             const p = proposerMap.get(uid, undefined);
@@ -56,15 +58,17 @@ export function matchingWithCapacity<P,R>(
     }
     else {
         const who = proposerMap.get(modifiedMatching.who);
+        console.log(`Nobody left for ${who}`);
         return fail(`Nobody left for ${who}`);
     }
 }
 
-export function galeShapely<P,R>(
+export function galeShapely<P,R,S>(
     proposers: List<P>,
     receivers: List<R>,
     proposerRanking: Map<P, List<R>>,
-    receiverRanking: Map<R, List<P>>): { kind: 'ok', value:  Map<R, P> } | { kind: 'exhausted', value: Map<R, P>, who: P } {
+    receiverRanking: Map<R, List<P>>,
+    proposerPrinter: (x: P) => S): { kind: 'ok', value:  Map<R, P> } | { kind: 'exhausted', value: Map<R, P>, who: P } {
     if (receivers.size < proposers.size) {
         return fail(`More receivers than proposers. Stable solution is not
                      possible.`);
@@ -81,7 +85,7 @@ export function galeShapely<P,R>(
         }
         const best = ranking.first(undefined);
         if (best === undefined) {
-            console.log("Exhausted ...");
+            console.log("Exhausted for " + proposerPrinter(proposer));
             free = free.remove(proposer);
         }
         else {

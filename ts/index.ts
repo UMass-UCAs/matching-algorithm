@@ -179,12 +179,12 @@ function displayMatching(prefs: List<Preference>,
                 return fail(`Did not select course!`);
             }
             return [ course, student.firstName + " " + student.lastName,
-                student.email, pref.studentRank, pref.facultyRank,
+                student.email, student.spireID, pref.studentRank, pref.facultyRank,
                 pref.taken, pref.grade,
-                student.gpa, student.majorGPA ];
+                student.gpa, student.majorGPA, student.freshUCA, student.freshEmployee ];
             })
             .toArray();
-    const headerRow = ['Course', 'UCA Name', 'Student Email', 'Student pref.', 'Faculty rank', 'Taken class?', 'Grade', 'GPA', 'Major GPA'];
+    const headerRow = ['Course', 'UCA Name', 'Student Email', 'SPIRE ID', 'Student pref.', 'Faculty rank', 'Taken class?', 'Grade', 'GPA', 'Major GPA', 'Past UCA', 'Past Employee'];
     result.unshift(headerRow);
     return result;
 }
@@ -215,7 +215,8 @@ export function main() {
         .filter(p => p.startsWith('~$') === false)
         .flatMap(path => parseInstructorPreferenceSheet(`${perClassDir}/${path}`));
     (global as any).prefsAll = prefs;
-    const outCsv = convertArrayToCsv(displayMatching(prefs, matching(capacities, prefs)));
+    let theMatch = matching(capacities, prefs);
+    const outCsv = convertArrayToCsv(displayMatching(prefs, theMatch));
     fs.writeFileSync('out.csv', outCsv);
     console.log('See the file ./out.csv for the assignment.');
 }
