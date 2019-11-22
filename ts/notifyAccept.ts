@@ -17,19 +17,14 @@ async function main() {
         const body = `Dear ${row.Name},
 
 We are delighted to inform you that you have been selected as a UCA for
-${row.Class} (Fall 2019). We will contact you later this semester with hiring
+${row.Class} (Spring 2020). We will contact you shortly with hiring
 paperwork, information on orientation, and so on.
-
-You are also invited the UCA End of Semester celebration (free dinner), on
-Thursday at 7PM (this week). We hope you can attend. Please RSVP here:
-
-https://forms.gle/b26VD4kiUQQvYpWeA
 
 Let us know if you have any questions.
 
 Best,
 
-Arjun and Joydeep
+Arjun and Emma
 UCA Program Directors
 
 P.S. Sorry if this is a duplicate message.
@@ -37,7 +32,7 @@ P.S. Sorry if this is a duplicate message.
         const child = cp.spawnSync('mail', [ '-s',
             `UCA Application: acceptance notification`,
             '-c', 'arjun@cs.umass.edu',
-            '-c', 'joydeepb@cs.umass.edu',
+            '-c', 'emmaanderson@cs.umass.edu',
             '-c', 'tszkeiserena@umass.edu',
             '-c', 'eearl@umass.edu',
             row.Email ], {
