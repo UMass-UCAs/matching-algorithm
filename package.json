@@ -21,7 +21,7 @@
     "@types/uuid": "^3.4.4",
     "convert-array-to-csv": "^1.0.4",
     "csv-generate": "^3.1.0",
-    "csv-parse": "^4.0.1",
+    "csv-parse": "^4.4.6",
     "csv-stringify": "^5.0.0",
     "immutable": "^4.0.0-rc.12",
     "node-xlsx": "^0.12.1",
